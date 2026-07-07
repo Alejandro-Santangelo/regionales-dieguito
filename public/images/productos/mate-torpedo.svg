@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" width="200" height="250">
+  <defs>
+    <linearGradient id="maderaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D2691E;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#CD853F;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#B8860B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B6914;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bordeMadera" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#A0522D;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#CD853F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B4513;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="yerbaGrad2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#6B8E23;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#556B2F;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  <path d="M65,55 Q60,55 55,65 L40,190 Q35,215 50,225 L150,225 Q165,215 160,190 L145,65 Q140,55 135,55 Z" fill="url(#maderaGrad)" stroke="#6B3A0A" stroke-width="2"/>
+  <path d="M55,100 Q100,95 145,100" stroke="#A07020" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M50,140 Q100,135 150,140" stroke="#A07020" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M48,180 Q100,175 152,180" stroke="#A07020" stroke-width="1" fill="none" opacity="0.5"/>
+  <ellipse cx="100" cy="55" rx="42" ry="12" fill="url(#bordeMadera)" stroke="#5C2E0A" stroke-width="1.5"/>
+  <ellipse cx="100" cy="60" rx="35" ry="8" fill="url(#yerbaGrad2)"/>
+  <line x1="125" y1="60" x2="140" y2="185" stroke="#B8860B" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="125" cy="60" r="4" fill="#DAA520"/>
+</svg>
