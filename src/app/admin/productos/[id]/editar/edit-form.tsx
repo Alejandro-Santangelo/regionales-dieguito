@@ -7,11 +7,11 @@ import ImageUploader from "@/components/ImageUploader";
 
 interface ProductData {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  images: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  categoria: string;
+  imagenes: string;
   stock: number;
 }
 
@@ -20,7 +20,7 @@ export function EditProductForm({ product }: { product: ProductData }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [images, setImages] = useState<string[]>(
-    product.images ? JSON.parse(product.images) : []
+    product.imagenes ? JSON.parse(product.imagenes) : []
   );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -65,7 +65,7 @@ export function EditProductForm({ product }: { product: ProductData }) {
           type="text"
           name="name"
           required
-          defaultValue={product.name}
+          defaultValue={product.nombre}
           className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
         />
       </div>
@@ -78,7 +78,7 @@ export function EditProductForm({ product }: { product: ProductData }) {
           name="description"
           required
           rows={4}
-          defaultValue={product.description}
+          defaultValue={product.descripcion}
           className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
         />
       </div>
@@ -94,7 +94,7 @@ export function EditProductForm({ product }: { product: ProductData }) {
             required
             step="0.01"
             min="0"
-            defaultValue={product.price}
+            defaultValue={product.precio}
             className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
           />
         </div>
@@ -121,7 +121,7 @@ export function EditProductForm({ product }: { product: ProductData }) {
         <select
           name="category"
           required
-          defaultValue={product.category}
+          defaultValue={product.categoria}
           className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none"
         >
           <option value="mate">Mate</option>

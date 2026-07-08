@@ -13,9 +13,9 @@ export default async function ProductosPage({
 }: ProductosPageProps) {
   const { categoria } = await searchParams;
 
-  const where = categoria ? { category: categoria } : {};
+  const where = categoria ? { categoria } : {};
 
-  const products = await prisma.product.findMany({
+  const products = await prisma.producto.findMany({
     where,
     orderBy: { createdAt: "desc" },
   });

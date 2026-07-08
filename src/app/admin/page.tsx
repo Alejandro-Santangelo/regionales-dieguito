@@ -6,13 +6,13 @@ export default async function AdminPage() {
   const session = await auth();
   const user = session?.user;
 
-  const productCount = await prisma.product.count();
-  const userCount = await prisma.user.count();
-  const orderCount = await prisma.order.count();
-  const recentProducts = await prisma.product.findMany({
+  const productCount = await prisma.producto.count();
+  const userCount = await prisma.usuario.count();
+  const orderCount = await prisma.orden.count();
+  const recentProducts = await prisma.producto.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
-    include: { user: { select: { name: true } } },
+    include: { usuario: { select: { nombre: true } } },
   });
 
   return (
@@ -90,19 +90,19 @@ export default async function AdminPage() {
               {recentProducts.map((product) => (
                 <tr key={product.id} className="border-b border-zinc-100">
                   <td className="py-3 text-sm font-medium text-zinc-900">
-                    {product.name}
+                    {product.nombre}
                   </td>
                   <td className="py-3 text-sm text-zinc-500 capitalize">
-                    {product.category}
+                    {product.categoria}
                   </td>
                   <td className="py-3 text-sm text-zinc-700">
-                    ${product.price.toFixed(2)}
+                    ${product.precio.toFixed(2)}
                   </td>
                   <td className="py-3 text-sm text-zinc-700">
                     {product.stock}
                   </td>
                   <td className="py-3 text-sm text-zinc-500">
-                    {product.user?.name || "—"}
+                    {product.usuario?.nombre || "—"}
                   </td>
                 </tr>
               ))}

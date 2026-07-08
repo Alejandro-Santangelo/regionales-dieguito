@@ -2,12 +2,12 @@ import { prisma } from "@/lib/db";
 import Link from "next/link";
 
 export default async function AdminOrdenesPage() {
-  const orders = await prisma.order.findMany({
+  const orders = await prisma.orden.findMany({
     orderBy: { createdAt: "desc" },
     include: {
-      user: { select: { name: true, email: true } },
+      usuario: { select: { nombre: true, email: true } },
       items: {
-        include: { product: { select: { name: true, images: true } } },
+        include: { producto: { select: { nombre: true, imagenes: true } } },
       },
     },
   });
@@ -58,7 +58,7 @@ export default async function AdminOrdenesPage() {
                     Orden #{order.id.slice(0, 8)}
                   </p>
                   <p className="font-medium text-zinc-900">
-                    {order.user.name || order.user.email || "Usuario"}
+                    {order.usuario.nombre || order.usuario.email || "Usuario"}
                   </p>
                   <p className="text-xs text-zinc-400">
                     {new Date(order.createdAt).toLocaleDateString("es-AR", {
@@ -73,10 +73,10 @@ export default async function AdminOrdenesPage() {
                 <div className="flex items-center gap-3">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      statusColors[order.status] || "bg-zinc-100 text-zinc-800"
+                      statusColors[order.estado] || "bg-zinc-100 text-zinc-800"
                     }`}
                   >
-                    {statusLabels[order.status] || order.status}
+                    {statusLabels[order.estado] || order.estado}
                   </span>
                   <span className="text-lg font-bold text-amber-700">
                     ${order.total.toFixed(2)}
@@ -107,16 +107,16 @@ export default async function AdminOrdenesPage() {
                     {order.items.map((item) => (
                       <tr key={item.id} className="border-b border-zinc-50">
                         <td className="py-2 text-sm text-zinc-900">
-                          {item.product.name}
+                          {item.producto.nombre}
                         </td>
                         <td className="py-2 text-sm text-zinc-600">
-                          {item.quantity}
+                          {item.cantidad}
                         </td>
                         <td className="py-2 text-sm text-zinc-600">
-                          ${item.price.toFixed(2)}
+                          ${item.precio.toFixed(2)}
                         </td>
                         <td className="py-2 text-sm text-zinc-900 text-right font-medium">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${(item.precio * item.cantidad).toFixed(2)}
                         </td>
                       </tr>
                     ))}

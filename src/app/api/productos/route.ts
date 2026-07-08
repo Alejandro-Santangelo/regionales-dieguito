@@ -70,15 +70,15 @@ export async function POST(request: Request) {
       ];
     }
 
-    const product = await prisma.product.create({
+    const product = await prisma.producto.create({
       data: {
-        name: name.trim(),
-        description: description.trim(),
-        price: priceNum,
+        nombre: name.trim(),
+        descripcion: description.trim(),
+        precio: priceNum,
         stock: stockNum,
-        category,
-        images: JSON.stringify(productImages),
-        userId: user.id as string,
+        categoria: category,
+        imagenes: JSON.stringify(productImages),
+        usuarioId: user.id as string,
       },
     });
 

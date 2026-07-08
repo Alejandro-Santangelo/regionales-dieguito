@@ -3,117 +3,134 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  username      String?   @unique
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?   // Para login con email/contraseña
-  role          String    @default("user") // "admin" o "user"
-  accounts      Account[]
-  sessions      Session[]
-  products      Product[]
-  cart          Cart?
-  orders        Order[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+model Usuario {
+  id              String     @id @default(cuid()) @map("id")
+  nombre          String?    @map("nombre")
+  usuario         String?    @unique @map("usuario")
+  email           String?    @unique @map("email")
+  emailVerificado DateTime?  @map("email_verificado")
+  imagen          String?    @map("imagen")
+  hashContrasena  String?    @map("hash_contrasena") // Hash de bcrypt para login
+  contrasena      String?    @map("contrasena") // Contraseña en texto plano para recuperación
+  rol             String     @default("user") @map("rol") // "admin" o "user"
+  cuentas         Cuenta[]
+  sesiones        Sesion[]
+  productos       Producto[]
+  carrito         Carrito?
+  ordenes         Orden[]
+  createdAt       DateTime   @default(now()) @map("creado_en")
+  updatedAt       DateTime   @updatedAt @map("actualizado_en")
+
+  @@map("usuarios")
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+model Cuenta {
+  id                String @id @default(cuid()) @map("id")
+  usuarioId         String @map("usuario_id")
+  tipo              String @map("tipo")
+  proveedor         String @map("proveedor")
+  proveedorCuentaId String @map("proveedor_cuenta_id")
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiraEn          Int?    @map("expira_en")
+  tokenTipo         String? @map("token_tipo")
+  alcance           String? @map("alcance")
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, map: "cuenta_usuario_fk")
 
-  @@unique([provider, providerAccountId])
+  @@unique([proveedor, proveedorCuentaId], map: "cuenta_proveedor_unique")
+  @@map("cuentas")
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Sesion {
+  id           String   @id @default(cuid()) @map("id")
+  sesionToken  String   @unique @map("sesion_token")
+  usuarioId    String   @map("usuario_id")
+  expira       DateTime @map("expira")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, map: "sesion_usuario_fk")
+
+  @@map("sesiones")
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+model TokenVerificacion {
+  identificador String
+  token         String   @unique
+  expira        DateTime
 
-  @@unique([identifier, token])
+  @@unique([identificador, token], map: "token_verificacion_unique")
+  @@map("tokens_verificacion")
 }
 
-model Product {
-  id          String      @id @default(cuid())
-  name        String
-  description String
-  price       Float
-  category    String      // "mate" o "bombilla"
-  images      String      // JSON array of image URLs
-  stock       Int         @default(0)
-  featured    Boolean     @default(false)
-  userId      String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+model Producto {
+  id          String       @id @default(cuid()) @map("id")
+  nombre      String       @map("nombre")
+  descripcion String       @map("descripcion")
+  precio      Float        @map("precio")
+  categoria   String       @map("categoria") // "mate" o "bombilla"
+  imagenes    String       @map("imagenes") // JSON array of image URLs
+  stock       Int          @default(0) @map("stock")
+  destacado   Boolean      @default(false) @map("destacado")
+  usuarioId   String       @map("usuario_id")
+  usuario     Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade, map: "producto_usuario_fk")
+  carritoItems CarritoItem[]
+  ordenItems  OrdenItem[]
+  createdAt   DateTime     @default(now()) @map("creado_en")
+  updatedAt   DateTime     @updatedAt @map("actualizado_en")
+
+  @@map("productos")
 }
 
-model Cart {
-  id        String     @id @default(cuid())
-  userId    String     @unique
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items     CartItem[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+model Carrito {
+  id        String       @id @default(cuid()) @map("id")
+  usuarioId String       @unique @map("usuario_id")
+  usuario   Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade, map: "carrito_usuario_fk")
+  items     CarritoItem[]
+  createdAt DateTime     @default(now()) @map("creado_en")
+  updatedAt DateTime     @updatedAt @map("actualizado_en")
+
+  @@map("carritos")
 }
 
-model CartItem {
-  id        String  @id @default(cuid())
-  cartId    String
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int     @default(1)
+model CarritoItem {
+  id         String  @id @default(cuid()) @map("id")
+  carritoId  String  @map("carrito_id")
+  carrito    Carrito @relation(fields: [carritoId], references: [id], onDelete: Cascade, map: "carrito_item_carrito_fk")
+  productoId String  @map("producto_id")
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade, map: "carrito_item_producto_fk")
+  cantidad   Int     @default(1) @map("cantidad")
 
-  @@unique([cartId, productId])
+  @@unique([carritoId, productoId], map: "carrito_item_unique")
+  @@map("carritos_items")
 }
 
-model Order {
-  id         String      @id @default(cuid())
-  userId     String
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  items      OrderItem[]
-  total      Float
-  status     String      @default("pending") // pending, paid, shipped, delivered, cancelled
-  paymentId  String?     // ID de pago de Mercado Pago
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+model Orden {
+  id         String      @id @default(cuid()) @map("id")
+  usuarioId  String      @map("usuario_id")
+  usuario    Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade, map: "orden_usuario_fk")
+  items      OrdenItem[]
+  total      Float       @map("total")
+  estado     String      @default("pending") @map("estado") // pending, paid, shipped, delivered, cancelled
+  pagoId     String?     @map("pago_id") // ID de pago de Mercado Pago
+  createdAt  DateTime    @default(now()) @map("creado_en")
+  updatedAt  DateTime    @updatedAt @map("actualizado_en")
+
+  @@map("ordenes")
 }
 
-model OrderItem {
-  id        String  @id @default(cuid())
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantity  Int
-  price     Float   // Precio al momento de la compra
+model OrdenItem {
+  id         String  @id @default(cuid()) @map("id")
+  ordenId    String  @map("orden_id")
+  orden      Orden   @relation(fields: [ordenId], references: [id], onDelete: Cascade, map: "orden_item_orden_fk")
+  productoId String  @map("producto_id")
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade, map: "orden_item_producto_fk")
+  cantidad   Int     @map("cantidad")
+  precio     Float   @map("precio") // Precio al momento de la compra
+
+  @@map("ordenes_items")
 }

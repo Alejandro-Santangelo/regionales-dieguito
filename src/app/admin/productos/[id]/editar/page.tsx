@@ -8,7 +8,7 @@ export default async function EditarProductoPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await prisma.product.findUnique({
+  const product = await prisma.producto.findUnique({
     where: { id },
   });
 

@@ -8,7 +8,7 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    await prisma.product.delete({
+    await prisma.producto.delete({
       where: { id },
     });
 
@@ -30,14 +30,14 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const product = await prisma.product.update({
+    const product = await prisma.producto.update({
       where: { id },
       data: {
-        name: body.name,
-        description: body.description,
-        price: parseFloat(body.price),
-        category: body.category,
-        images: JSON.stringify(body.images || []),
+        nombre: body.name,
+        descripcion: body.description,
+        precio: parseFloat(body.price),
+        categoria: body.category,
+        imagenes: JSON.stringify(body.images || []),
         stock: parseInt(body.stock || "0"),
       },
     });

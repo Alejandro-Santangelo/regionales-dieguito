@@ -24,23 +24,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const login = credentials.email as string;
 
-        // Buscar por email o por username
-        const user = await prisma.user.findFirst({
+        // Buscar por email o por usuario
+        const user = await prisma.usuario.findFirst({
           where: {
             OR: [
               { email: login },
-              { username: login },
+              { usuario: login },
             ],
           },
         });
 
-        if (!user || !user.password) {
+        if (!user || !user.hashContrasena) {
           return null;
         }
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
-          user.password
+          user.hashContrasena
         );
 
         if (!isValid) {
@@ -50,9 +50,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: user.id,
           email: user.email,
-          name: user.name,
-          role: user.role,
-          image: user.image,
+          name: user.nombre,
+          role: user.rol,
+          image: user.imagen,
         };
       },
     }),

@@ -33,7 +33,7 @@ export async function AuthNav() {
             href="/auth/register"
             className="bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-amber-500 transition-colors"
           >
-            Registrarse
+            Registrarse y Comprar
           </Link>
         </>
       )}

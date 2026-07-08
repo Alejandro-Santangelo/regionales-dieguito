@@ -57,7 +57,7 @@ export async function createProduct(
 
     // Crear producto (usuario temporal para desarrollo)
     // En producción, usar el usuario autenticado
-    const user = await prisma.user.findFirst();
+    const user = await prisma.usuario.findFirst();
     if (!user) {
       return {
         error: "No hay usuarios registrados. Creá una cuenta primero.",
@@ -65,15 +65,15 @@ export async function createProduct(
       };
     }
 
-    await prisma.product.create({
+    await prisma.producto.create({
       data: {
-        name: name.trim(),
-        description: description.trim(),
-        price,
-        stock,
-        category,
-        images: JSON.stringify(images),
-        userId: user.id,
+        nombre: name.trim(),
+        descripcion: description.trim(),
+        precio: price,
+        stock: stock,
+        categoria: category,
+        imagenes: JSON.stringify(images),
+        usuarioId: user.id,
       },
     });
 

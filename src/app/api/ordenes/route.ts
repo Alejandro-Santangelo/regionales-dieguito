@@ -10,20 +10,20 @@ export async function POST() {
   }
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.usuario.findUnique({
       where: { email: session.user.email },
       include: {
-        cart: {
+        carrito: {
           include: {
             items: {
-              include: { product: true },
+              include: { producto: true },
             },
           },
         },
       },
     });
 
-    if (!user?.cart || user.cart.items.length === 0) {
+    if (!user?.carrito || user.carrito.items.length === 0) {
       return NextResponse.json(
         { error: "El carrito está vacío" },
         { status: 400 }
@@ -31,30 +31,30 @@ export async function POST() {
     }
 
     // Calcular total
-    const total = user.cart.items.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
+    const total = user.carrito.items.reduce(
+      (sum, item) => sum + item.producto.precio * item.cantidad,
       0
     );
 
     // Crear la orden con sus items
-    const order = await prisma.order.create({
+    const order = await prisma.orden.create({
       data: {
-        userId: user.id,
+        usuarioId: user.id,
         total,
-        status: "pending",
+        estado: "pending",
         items: {
-          create: user.cart.items.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.product.price,
+          create: user.carrito.items.map((item) => ({
+            productoId: item.productoId,
+            cantidad: item.cantidad,
+            precio: item.producto.precio,
           })),
         },
       },
     });
 
     // Vaciar el carrito
-    await prisma.cartItem.deleteMany({
-      where: { cartId: user.cart.id },
+    await prisma.carritoItem.deleteMany({
+      where: { carritoId: user.carrito.id },
     });
 
     return NextResponse.json(

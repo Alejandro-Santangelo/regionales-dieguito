@@ -3,9 +3,9 @@ import Link from "next/link";
 import { DeleteButton } from "./delete-button";
 
 export default async function AdminProductosPage() {
-  const products = await prisma.product.findMany({
+  const products = await prisma.producto.findMany({
     orderBy: { createdAt: "desc" },
-    include: { user: { select: { name: true } } },
+    include: { usuario: { select: { nombre: true } } },
   });
 
   return (
@@ -49,29 +49,29 @@ export default async function AdminProductosPage() {
               <tr key={product.id} className="border-b border-zinc-100 hover:bg-zinc-50">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    {product.images && JSON.parse(product.images)[0] && (
+                    {product.imagenes && JSON.parse(product.imagenes)[0] && (
                       <img
-                        src={JSON.parse(product.images)[0]}
-                        alt={product.name}
+                        src={JSON.parse(product.imagenes)[0]}
+                        alt={product.nombre}
                         className="w-10 h-10 rounded-lg object-cover bg-zinc-100"
                       />
                     )}
                     <span className="font-medium text-zinc-900">
-                      {product.name}
+                      {product.nombre}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-sm capitalize text-zinc-500">
-                  {product.category}
+                  {product.categoria}
                 </td>
                 <td className="px-6 py-4 text-sm text-zinc-700">
-                  ${product.price.toFixed(2)}
+                  ${product.precio.toFixed(2)}
                 </td>
                 <td className="px-6 py-4 text-sm text-zinc-700">
                   {product.stock}
                 </td>
                 <td className="px-6 py-4 text-sm text-zinc-500">
-                  {product.user?.name || "—"}
+                  {product.usuario?.nombre || "—"}
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">

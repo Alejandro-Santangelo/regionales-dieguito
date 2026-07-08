@@ -9,14 +9,14 @@ export async function GET() {
     return NextResponse.json({ items: [], total: 0 });
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.usuario.findUnique({
     where: { email: session.user.email },
     include: {
-      cart: {
+      carrito: {
         include: {
           items: {
             include: {
-              product: true,
+              producto: true,
             },
           },
         },
@@ -24,18 +24,18 @@ export async function GET() {
     },
   });
 
-  if (!user?.cart) {
+  if (!user?.carrito) {
     return NextResponse.json({ items: [], total: 0 });
   }
 
-  const items = user.cart.items.map((item) => ({
+  const items = user.carrito.items.map((item) => ({
     id: item.id,
-    productId: item.productId,
-    name: item.product.name,
-    price: item.product.price,
-    image: item.product.images ? JSON.parse(item.product.images)[0] : null,
-    quantity: item.quantity,
-    stock: item.product.stock,
+    productId: item.productoId,
+    name: item.producto.nombre,
+    price: item.producto.precio,
+    image: item.producto.imagenes ? JSON.parse(item.producto.imagenes)[0] : null,
+    quantity: item.cantidad,
+    stock: item.producto.stock,
   }));
 
   const total = items.reduce(
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 
   const { productId, quantity = 1 } = await request.json();
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.usuario.findUnique({
     where: { email: session.user.email },
   });
 
@@ -64,39 +64,39 @@ export async function POST(request: Request) {
   }
 
   // Obtener o crear carrito
-  let cart = await prisma.cart.findUnique({
-    where: { userId: user.id },
+  let cart = await prisma.carrito.findUnique({
+    where: { usuarioId: user.id },
   });
 
   if (!cart) {
-    cart = await prisma.cart.create({
-      data: { userId: user.id },
+    cart = await prisma.carrito.create({
+      data: { usuarioId: user.id },
     });
   }
 
   // Verificar si el producto ya está en el carrito
-  const existingItem = await prisma.cartItem.findUnique({
+  const existingItem = await prisma.carritoItem.findUnique({
     where: {
-      cartId_productId: {
-        cartId: cart.id,
-        productId,
+      carritoId_productoId: {
+        carritoId: cart.id,
+        productoId: productId,
       },
     },
   });
 
   if (existingItem) {
     // Actualizar cantidad
-    await prisma.cartItem.update({
+    await prisma.carritoItem.update({
       where: { id: existingItem.id },
-      data: { quantity: existingItem.quantity + quantity },
+      data: { cantidad: existingItem.cantidad + quantity },
     });
   } else {
     // Agregar nuevo item
-    await prisma.cartItem.create({
+    await prisma.carritoItem.create({
       data: {
-        cartId: cart.id,
-        productId,
-        quantity,
+        carritoId: cart.id,
+        productoId: productId,
+        cantidad: quantity,
       },
     });
   }
@@ -113,9 +113,9 @@ export async function PUT(request: Request) {
 
   const { itemId, quantity } = await request.json();
 
-  await prisma.cartItem.update({
+  await prisma.carritoItem.update({
     where: { id: itemId },
-    data: { quantity },
+    data: { cantidad: quantity },
   });
 
   return NextResponse.json({ message: "Cantidad actualizada" });
@@ -130,7 +130,7 @@ export async function DELETE(request: Request) {
 
   const { itemId } = await request.json();
 
-  await prisma.cartItem.delete({
+  await prisma.carritoItem.delete({
     where: { id: itemId },
   });
 

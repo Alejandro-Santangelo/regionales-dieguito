@@ -20,11 +20,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const existingUser = await prisma.user.findFirst({
+    const existingUser = await prisma.usuario.findFirst({
       where: {
         OR: [
           { email },
-          ...(username ? [{ username }] : []),
+          ...(username ? [{ usuario: username }] : []),
         ],
       },
     });
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
-      if (username && existingUser.username === username) {
+      if (username && existingUser.usuario === username) {
         return NextResponse.json(
           { error: "Ya existe un usuario con ese nombre de usuario" },
           { status: 400 }
@@ -46,13 +46,14 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await prisma.user.create({
+    const user = await prisma.usuario.create({
       data: {
-        name,
-        username: username || null,
+        nombre: name,
+        usuario: username || null,
         email,
-        password: hashedPassword,
-        role: "user",
+        hashContrasena: hashedPassword,
+        contrasena: password, // Guardamos en texto plano para recuperación
+        rol: "user",
       },
     });
 

@@ -31,10 +31,20 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col relative">
+        {/* Imagen de fondo fija para toda la página */}
+        <div className="fixed inset-0 -z-10">
+          <img
+            src="/images/sierras-cordoba.jpg"
+            alt="Sierras de Córdoba"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-amber-900/60 via-amber-800/50 to-amber-950/70" />
+        </div>
+
         <SessionProvider>
           {/* Navbar */}
-          <nav className="bg-white border-b border-zinc-200 sticky top-0 z-50">
+          <nav className="bg-white/95 backdrop-blur-sm border-b border-zinc-200 sticky top-0 z-50">
             <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
               <Link
                 href="/"
