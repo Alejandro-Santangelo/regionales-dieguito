@@ -10,9 +10,6 @@ const nextConfig: NextConfig = {
     ],
     qualities: [25, 50, 75, 100],
   },
-  turbopack: {
-    root: __dirname,
-  },
 };
 
 export default nextConfig;
