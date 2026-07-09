@@ -55,16 +55,16 @@ export default function ProductCard({
         )}
       </div>
       <div className="p-4">
-        <h3 className="font-semibold text-white truncate">{nombre}</h3>
-        <p className="text-sm text-white/80 line-clamp-2 mt-1">
+        <h3 className="font-semibold text-zinc-900">{nombre}</h3>
+        <p className="text-sm text-zinc-500 line-clamp-2 mt-1">
           {descripcion}
         </p>
         <div className="flex items-center justify-between mt-3">
-          <span className="text-lg font-bold text-amber-300">
+          <span className="text-lg font-bold text-amber-700">
             ${precio.toFixed(2)}
           </span>
           {stock > 0 && stock <= 5 && (
-            <span className="text-xs text-amber-200">
+            <span className="text-xs text-amber-600">
               Quedan {stock}
             </span>
           )}

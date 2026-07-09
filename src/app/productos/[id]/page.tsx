@@ -170,6 +170,7 @@ export default async function ProductoDetallePage({
               <AddToCartButton
                 productId={product.id}
                 disabled={product.stock === 0}
+                stock={product.stock}
               />
             )}
             <Link

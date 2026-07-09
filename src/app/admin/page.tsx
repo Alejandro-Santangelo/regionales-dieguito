@@ -9,6 +9,9 @@ export default async function AdminPage() {
   const productCount = await prisma.producto.count();
   const userCount = await prisma.usuario.count();
   const orderCount = await prisma.orden.count();
+  const cancelledOrderCount = await prisma.orden.count({
+    where: { estado: "cancelled" },
+  });
   const recentProducts = await prisma.producto.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,
@@ -29,7 +32,7 @@ export default async function AdminPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-xl shadow-md p-6">
           <p className="text-3xl font-bold text-amber-700">{productCount}</p>
           <p className="text-zinc-600 mt-1">Productos</p>
@@ -41,6 +44,10 @@ export default async function AdminPage() {
         <div className="bg-white rounded-xl shadow-md p-6">
           <p className="text-3xl font-bold text-amber-700">{orderCount}</p>
           <p className="text-zinc-600 mt-1">Pedidos</p>
+        </div>
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <p className="text-3xl font-bold text-red-600">{cancelledOrderCount}</p>
+          <p className="text-zinc-600 mt-1">Pedidos Cancelados</p>
         </div>
       </div>
 

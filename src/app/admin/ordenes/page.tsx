@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
+import { OrderActions } from "@/components/OrderActions";
 
 export default async function AdminOrdenesPage() {
   const orders = await prisma.orden.findMany({
@@ -12,26 +13,15 @@ export default async function AdminOrdenesPage() {
     },
   });
 
-  const statusColors: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-800",
-    paid: "bg-green-100 text-green-800",
-    shipped: "bg-blue-100 text-blue-800",
-    delivered: "bg-green-100 text-green-800",
-    cancelled: "bg-red-100 text-red-800",
-  };
-
-  const statusLabels: Record<string, string> = {
-    pending: "Pendiente",
-    paid: "Pagado",
-    shipped: "Enviado",
-    delivered: "Entregado",
-    cancelled: "Cancelado",
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900">Órdenes / Pedidos</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-zinc-900">Órdenes / Pedidos</h1>
+          <p className="text-zinc-500 mt-1">
+            Gestioná los pedidos de todos los clientes
+          </p>
+        </div>
       </div>
 
       {orders.length === 0 ? (
@@ -71,13 +61,10 @@ export default async function AdminOrdenesPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      statusColors[order.estado] || "bg-zinc-100 text-zinc-800"
-                    }`}
-                  >
-                    {statusLabels[order.estado] || order.estado}
-                  </span>
+                  <OrderActions
+                    orderId={order.id}
+                    currentStatus={order.estado}
+                  />
                   <span className="text-lg font-bold text-amber-700">
                     ${order.total.toFixed(2)}
                   </span>
